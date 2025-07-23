@@ -13,5 +13,7 @@ def transactions_list(request):
 
     )
     context={'filter':transactions_filter}
+    if request.htmx:
+       return render(request,'tracker/partials/transaction-container.html',context) 
     return render(request,'tracker/transactions-list.html',context)
     

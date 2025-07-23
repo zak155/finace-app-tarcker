@@ -1,3 +1,4 @@
+{% load widget_tweaks%}
 <!--grid container-->
 <div class="flex flex-col-reverse md:grid md:grid-cols-4 md:gap-4" id="transaction-container">
     <!--3/4 colos for the table of transaction-->
@@ -30,14 +31,14 @@
     {%endif%}
    </div>
 <!--1/4 cols for the transaction table-->
-   <div class="span-col-3">
+   <div class="col-span-1">
       
-  <form  hx-get="{% url 'transaction-list'%}"
+  <form  hx-get="{% url 'transactions-list'%}"
          hx-target="#transaction-container"
-         hx-swap="OuterHTML">
+         hx-swap="outerHTML">
     <div class="mb-2 form-control">
     {{filter.form.transaction_type|add_label_class:"label text-white"}}
-    {%render_field filter.form.transaction_type class="select bg-gray-50 text-gray-50"%}
+    {% render_field filter.form.transaction_type class="select bg-gray-50 text-gray-900" %}
     </div>
     <button class="btn btn-success">
       Filter

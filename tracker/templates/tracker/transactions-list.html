@@ -1,5 +1,5 @@
 {% extends 'tracker/base.html'%}
-{% load widget_tweaks%}
+
 {%block title%}
 Transactions list
 {%endblock%}
@@ -12,7 +12,7 @@ Transactions list
     Transactions list
 </h1>
 <div class="relative overflow-x-auto text-white">
-
+{% include 'tracker/partials/transaction-container.html'%}
 </div>
 
 {%endblock%}
