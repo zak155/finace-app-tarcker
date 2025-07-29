@@ -1,8 +1,36 @@
 {% load widget_tweaks%}
+{% load humanize %}
 <!--grid container-->
 <div class="flex flex-col-reverse md:grid md:grid-cols-4 md:gap-4" id="transaction-container">
     <!--3/4 colos for the table of transaction-->
    <div class="col-span-3">
+    <div class="my-4">
+     
+      <h1 class="mt-4 mb-6 prose prose-2xl text-white">
+       Total
+      </h1>
+      <table class="table">
+        <thead class="text-xs text-white uppercase">
+          <tr>
+            <th>Toatal Expense</th>
+            <th>Toatal Income</th>
+            <th>Net Income</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${{total_expense|floatformat|intcomma}}</td>
+            <td>${{total_income|floatformat|intcomma}}</td>
+            <td>${{net_income|floatformat|intcomma}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <h1 class="mt-4 mb-6 prose prose-2xl text-white">
+      Transactions
+     </h1>
     {%if filter.qs%}
     <table class="table">
     <thead class="text-xs text-white uppercase">
