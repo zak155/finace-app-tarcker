@@ -3,6 +3,7 @@ from tracker.models import Transaction
 from django.contrib.auth.decorators import login_required
 from tracker.filter import TransactionFilter
 from tracker.forms import TransactionForm
+from django_htmx.http import retarget
 # Create your views here.
 def index(request):
     return render(request, 'tracker/index.html')
@@ -26,12 +27,17 @@ def transactions_list(request):
     return render(request,'tracker/transactions-list.html',context)
 
 def createTransaction(request):
-    if request.method=="POST":
+    if request.method =="POST":
         form=TransactionForm(request.POST)
-        transaction=form.save(commit=False)
-        transaction.user=request.user
-        transaction.save()
-        context={'message':"transaction created sucessfuly"}
-        return render(request,'tracker/partials/transaction-success.html',context)
+        if form.is_valid():
+           transaction=form.save(commit=False)
+           transaction.user=request.user
+           transaction.save()
+           context={'message':"transaction created sucessfuly"}
+           return render(request,'tracker/partials/transaction-success.html',context)
+        else:
+            context={'form':form}
+            response=render(request,'tracker/partials/create_transaction.html',context)
+            return retarget(response,"#transaction-block") 
     context={'form':TransactionForm()}
     return render(request,'tracker/partials/create_transaction.html',context)
