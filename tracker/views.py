@@ -2,7 +2,7 @@ from django.shortcuts import render
 from tracker.models import Transaction
 from django.contrib.auth.decorators import login_required
 from tracker.filter import TransactionFilter
-
+from tracker.forms import TransactionForm
 # Create your views here.
 def index(request):
     return render(request, 'tracker/index.html')
@@ -24,4 +24,14 @@ def transactions_list(request):
     if request.htmx:
        return render(request,'tracker/partials/transaction-container.html',context) 
     return render(request,'tracker/transactions-list.html',context)
-    
+
+def createTransaction(request):
+    if request.method=="POST":
+        form=TransactionForm(request.POST)
+        transaction=form.save(commit=False)
+        transaction.user=request.user
+        transaction.save()
+        context={'message':"transaction created sucessfuly"}
+        return render(request,'tracker/partials/transaction-success.html',context)
+    context={'form':TransactionForm()}
+    return render(request,'tracker/partials/create_transaction.html',context)
