@@ -1,5 +1,7 @@
 {% load widget_tweaks%}
 {% load humanize %}
+{% load partials %}
+
 <!--grid container-->
 <div class="flex flex-col-reverse md:grid md:grid-cols-4 md:gap-4" id="transaction-container">
     <!--3/4 colos for the table of transaction-->
@@ -43,7 +45,7 @@
           </svg>
      </a>
     </div>
-    {%if filter.qs%}
+    {%if transactions%}
     <table class="table">
     <thead class="text-xs text-white uppercase">
         <tr>
@@ -54,8 +56,16 @@
         </tr>
     </thead>
     <tbody>
-        {%for transaction in filter.qs%}
+        {% partialdef transaction_list inline=True%}
+        {%for transaction in transactions%}
+        {% if forloop.last and transactions.has_next%}
+        <tr hx-get="{% url 'get-transactions'%}?page={{transactions.next_page_number}}"
+           hx-trigger="revealed"
+           hx-swap="afterend"
+           hx-include="#filterform">
+          {% else %}
           <tr>
+            {% endif %}
             <td>{{transaction.date}}</td>
             <td>{{transaction.category}}</td>
             <td>{{transaction.type}}</td>
@@ -86,6 +96,7 @@
             </td>
           </tr>
         {%endfor%}
+        {%endpartialdef%}
     </tbody>
     </table>
     {%else%}
@@ -99,7 +110,9 @@
       
   <form  hx-get="{% url 'transactions-list'%}"
          hx-target="#transaction-container"
-         hx-swap="outerHTML">
+         hx-swap="outerHTML"
+         id="filterform"
+         hx-indicator="#spinner">
     <div class="mb-2 form-control">
     {{filter.form.transaction_type|add_label_class:"label text-white"}}
     {% render_field filter.form.transaction_type class="select bg-gray-50 text-gray-900" %}
@@ -126,3 +139,12 @@
   </form>
    </div>
   </div>
+
+  <span id="spinner" class="loading loading-spinner loading-xshtmx-indicator
+  htmx-indicator" ></span>
+<span id="spinner" class="loading loading-spinner loading-sm htmx-indicator
+htmx-indicator" ></span>
+<span id="spinner" class="loading loading-spinner loading-md htmx-indicator
+htmx-indicator"></span>
+
+

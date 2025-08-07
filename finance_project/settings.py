@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django_filters',
       'django_htmx',
       'django.contrib.humanize',
+      'template_partials',
     
     # project apps
     "tracker",
@@ -142,3 +143,4 @@ INTERNAL_IPS = [
 
 AUTH_USER_MODEL = 'tracker.User'
 LOGIN_REDIRECT_URL = 'index'
+PAGE_SIZE=5

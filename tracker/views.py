@@ -2,10 +2,13 @@ from django.shortcuts import render
 from tracker.models import Transaction
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
+from django.core.paginator import Paginator
+from django.conf import settings
 from tracker.filter import TransactionFilter
 from tracker.forms import TransactionForm
 from django_htmx.http import retarget
 from django.shortcuts import get_object_or_404
+from tracker.charting import plot_income_expenses_bar_charts
 
 # Create your views here.
 def index(request):
@@ -14,12 +17,15 @@ def index(request):
 def transactions_list(request):
     transactions_filter=TransactionFilter(
         request.GET,
-        queryset=Transaction.objects.filter(user=request.user)
+        queryset=Transaction.objects.filter(user=request.user).select_related('category')
 
     )
+    paginator=Paginator(transactions_filter.qs,settings.PAGE_SIZE)
+    transaction_page=paginator.page(1)#default when this view trigerred
     total_income=transactions_filter.qs.get_income_total()
     total_expense=transactions_filter.qs.get_expense_total()
     context={
+        'transactions':transaction_page,
         'filter':transactions_filter,
         'total_income':total_income,
         'total_expense':total_expense,
@@ -73,3 +79,28 @@ def deleteTransaction(request,pk):
         'message':f"Transaction of{transaction.amount} on {transaction.date} deleted sucessfully"
     }
     return render(request,'tracker/partials/transaction-success.html',context)
+@login_required
+def getTransaction(request):
+    import time
+    time.sleep(2)
+    page=request.GET.get('page',1)
+    transactions_filter=TransactionFilter(
+        request.GET,
+        queryset=Transaction.objects.filter(user=request.user).select_related('category')
+
+    )
+    paginator=Paginator(transactions_filter.qs,settings.PAGE_SIZE)
+    context={
+        'transactions':paginator.page(page)
+    }
+    return render(request,
+                  'tracker/partials/transaction-container.html#transaction_list',
+                  context)
+def transactionCharts(request):
+     transactions_filter=TransactionFilter(
+        request.GET,
+        queryset=Transaction.objects.filter(user=request.user).select_related('category')
+
+     )
+     context={'filter': transactions_filter}
+     return render(request,'tracker/charts.html',context)    

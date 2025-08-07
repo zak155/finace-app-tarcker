@@ -1,0 +1,52 @@
+{% load widget_tweaks%}
+
+
+<!--grid container-->
+<div class="flex flex-col-reverse md:grid md:grid-cols-4 md:gap-4" id="charts-container">
+    <!--3/4 colos for the table of transaction-->
+   <div class="col-span-3">
+    
+   </div>
+<!--1/4 cols for the transaction table-->
+   <div class="col-span-1">
+      
+  <form  hx-get="{% url 'transactions-chart'%}"
+         hx-target="#charts-container"
+         hx-swap="outerHTML"
+         id="filterform"
+         hx-indicator="#spinner">
+    <div class="mb-2 form-control">
+    {{filter.form.transaction_type|add_label_class:"label text-white"}}
+    {% render_field filter.form.transaction_type class="select bg-gray-50 text-gray-900" %}
+    </div>
+
+    <div class="mb-2 form-control">
+      {{filter.form.start_date|add_label_class:"label text-white"}}
+      {% render_field filter.form.start_date class="input bg-gray-50 text-gray-900" %}
+      </div>
+
+      <div class="mb-2 form-control">
+        {{filter.form.end_date|add_label_class:"label text-white"}}
+        {% render_field filter.form.end_date class="input bg-gray-50 text-gray-900" %}
+        </div>
+
+        <div class="mb-4 form-control">
+          
+          {% render_field filter.form.category class="text-green-500 border-gray-300 focus:ring-green-300" %}
+          </div>
+          
+    <button class="btn btn-success">
+      Filter
+    </button>
+  </form>
+   </div>
+  </div>
+
+  <span id="spinner" class="loading loading-spinner loading-xshtmx-indicator
+  htmx-indicator" ></span>
+<span id="spinner" class="loading loading-spinner loading-sm htmx-indicator
+htmx-indicator" ></span>
+<span id="spinner" class="loading loading-spinner loading-md htmx-indicator
+htmx-indicator"></span>
+
+

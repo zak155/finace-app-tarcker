@@ -7,5 +7,7 @@ urlpatterns = [
     path('transactions/',views.transactions_list,name='transactions-list'),
     path('transactions/create',views.createTransaction,name="create-transaction"),
     path('transactions/<int:pk>/update/',views.updateTransaction,name="update"),
-    path('transactions/<int:pk>/delete/',views.deleteTransaction,name="delete")
+    path('transactions/<int:pk>/delete/',views.deleteTransaction,name="delete"),
+    path('get-transactions/',views.getTransaction,name="get-transactions"),
+    path('transactions/charts/',views.transactionCharts,name="transactions-chart")
 ]
